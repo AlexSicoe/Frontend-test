@@ -1,9 +1,9 @@
 .orangeBorder {
+  display: inline-block;
   border: 2px solid #EC6825;
   border-radius: 7px;
   border-spacing: 10px;
   margin: 10px;
-  display: inline-block;
   box-shadow: 0 1px 3px gray;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .btn {
-  background-image: linear-gradient(#F9C756, #F7701F);
+  background-image: linear-gradient(#F9D54E, #F7701F);
   border: 1px solid white;
   border-radius: 5px;
   color: white;

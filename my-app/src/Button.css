@@ -1,9 +1,18 @@
 .orangeBorder {
   border: 2px solid #EC6825;
-  border-radius: 5px;
+  border-radius: 7px;
   border-spacing: 10px;
   margin: 10px;
   display: inline-block;
+  box-shadow: 0 1px 3px gray;
+}
+
+.orangeBorder:hover {
+  box-shadow: 0 3px 3px gray;
+}
+
+.orangeBorder:active {
+  box-shadow: none;
 }
 
 .btn {
@@ -13,18 +22,15 @@
   color: white;
   font-size: 12px;
   padding: 7px 50px;
-  box-shadow: 0 1px 3px gray;
 }
 
 .btn:hover {
   padding: 7px 55px;
-  box-shadow: 0 3px 3px gray;
 }
 
 .btn:active {
   font-size: 10px;
   padding: 7px 45px;
-  box-shadow: none;
 }
 
 .btn:focus {

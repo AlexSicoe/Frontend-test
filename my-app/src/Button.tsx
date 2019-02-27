@@ -4,7 +4,7 @@ import './Button.css'
 export default class Button extends Component<any, any> {
   render() {
     return (
-      <div>
+      <div className="orangeBorder">
         <button className="btn">
           <ArrowRight />
           CLICK ME!!

@@ -17,7 +17,7 @@ export default class Button extends Component<any, any> {
 
 function ArrowRight() {
   return (
-    <span className="rightArrow">
+    <span id="rightArrow">
       <div className="fa fa-arrow-right" />
     </span>
   )
@@ -25,7 +25,7 @@ function ArrowRight() {
 
 function ArrowLeft() {
   return (
-    <span className="leftArrow">
+    <span id="leftArrow">
       <div className="fa fa-arrow-left" />
     </span>
   )

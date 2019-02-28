@@ -37,13 +37,13 @@
   outline: 0;
 }
 
-.rightArrow {
+#rightArrow {
   position: relative;
   right: 30px;
   font-size: 18px;
 }
 
-.leftArrow {
+#leftArrow {
   position: relative;
   left: 30px;
   font-size: 18px;

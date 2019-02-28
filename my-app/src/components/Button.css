@@ -9,10 +9,12 @@
 
 .orangeBorder:hover {
   box-shadow: 0 3px 3px gray;
+  transform: scale(1.05);
 }
 
 .orangeBorder:active {
   box-shadow: none;
+  transform: scale(0.9);
 }
 
 .btn {
@@ -22,15 +24,6 @@
   color: white;
   font-size: 12px;
   padding: 7px 50px;
-}
-
-.btn:hover {
-  padding: 7px 55px;
-}
-
-.btn:active {
-  font-size: 10px;
-  padding: 7px 45px;
 }
 
 .btn:focus {

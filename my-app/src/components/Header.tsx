@@ -3,7 +3,8 @@ import React from 'react'
 export default function Header() {
   return (
     <header>
-      Title <SettingsButton />
+      <div id="title">Title</div>
+      <SettingsButton />
     </header>
   )
 }

@@ -4,7 +4,7 @@ import HomePage from './components/HomePage'
 class App extends Component {
   render() {
     return (
-      <div>
+      <div id="app">
         <HomePage />
       </div>
     )

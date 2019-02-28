@@ -8,6 +8,11 @@ Proin at fermentum ipsum. Nunc euismod tortor id ligula rutrum, ut mattis erat d
 Nullam sit amet malesuada est, vitae vestibulum sem. Aliquam convallis magna massa, at hendrerit lorem eleifend iaculis. Sed et rutrum orci, at auctor nibh. Aliquam mattis orci quis vestibulum pretium. Mauris mollis, libero ac bibendum posuere, augue est ullamcorper elit, eu placerat ex ex eu lacus. Praesent viverra ex at volutpat ornare. Vestibulum nec odio nec tortor commodo dapibus. Nam congue quam quis tristique viverra. Aliquam at neque eget urna suscipit volutpat nec at justo. Quisque dapibus lectus nec erat auctor, non faucibus lacus volutpat. Phasellus eget convallis turpis, sit amet molestie turpis. Curabitur blandit eros a nunc varius, id volutpat mi vestibulum. Vivamus sit amet quam sem. Vivamus rhoncus tincidunt felis. Mauris lobortis lacus sed neque tempus, ac fermentum ante commodo.
 
 Proin porttitor maximus est vitae congue. Sed ac mollis magna, sit amet lobortis lorem. Nullam rutrum nunc nec nunc malesuada ullamcorper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consectetur, orci non dignissim fringilla, elit purus fermentum nisl, sit amet eleifend sem felis ut nulla. Donec dictum mauris a erat facilisis luctus. Donec at pharetra eros. Mauris dapibus augue odio, nec vehicula ligula hendrerit non. In molestie vehicula velit, at varius mi. Aenean consectetur consectetur turpis vel laoreet.`
-export default function TextView() {
-  return <main>{TEXT}</main>
+export default function Main() {
+  return (
+    <main>
+      <h1> Heading 1 </h1>
+      {TEXT}
+    </main>
+  )
 }

@@ -113,30 +113,26 @@ function renderCanvas(width, height) {
   /** @type {boolean} */
   let isPainting
 
-  function redraw() {
-    if (!context) {
-      throw new Error('inexistent context')
-    }
+  /**
+   * @param {CanvasRenderingContext2D} context
+   */
+  function draw(context) {
+    let curr = points[points.length - 1]
+    context.strokeStyle = curr.paint.color
+    context.lineJoin = curr.paint.join
+    context.lineWidth = curr.paint.size
 
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-    for (let i = 0; i < points.length; i++) {
-      let curr = points[i]
-      let last
-      context.strokeStyle = curr.paint.color
-      context.lineJoin = curr.paint.join
-      context.lineWidth = curr.paint.size
+    context.beginPath()
 
-      context.beginPath()
-      if (curr.isDragging && i !== 0) {
-        last = points[i - 1]
-        context.moveTo(last.x, last.y)
-      } else {
-        context.moveTo(curr.x - 1, curr.y)
-      }
-      context.lineTo(curr.x, curr.y)
-      context.closePath()
-      context.stroke()
+    if (curr.isDragging && points.length > 1) {
+      let last = points[points.length - 2]
+      context.moveTo(last.x, last.y)
+    } else {
+      context.moveTo(curr.x - 1, curr.y)
     }
+    context.lineTo(curr.x, curr.y)
+    context.closePath()
+    context.stroke()
   }
 
   canvas.id = 'canvas'
@@ -156,7 +152,7 @@ function renderCanvas(width, height) {
       paint: paintState
     }
     points.push(point)
-    redraw()
+    draw(context)
   }
 
   canvas.onmousemove = (e) => {
@@ -171,7 +167,7 @@ function renderCanvas(width, height) {
         paint: paintState
       }
       points.push(point)
-      redraw()
+      draw(context)
     }
   }
 

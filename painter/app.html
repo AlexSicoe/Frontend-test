@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Painter App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="app.css" />
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <form action="" id="form">
+        Width: <br />
+        <input
+          type="number"
+          min="50"
+          name="width"
+          id="width"
+          required
+          autofocus
+        />
+        <br />
+        Height: <br />
+        <input type="number" min="50" name="height" id="height" required />
+        <br />
+        <input type="submit" value="Let's paint!" onclick="onSubmit(event)" />
+      </form>
+    </div>
+  </body>
+</html>

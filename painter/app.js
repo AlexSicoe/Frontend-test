@@ -1,41 +1,59 @@
 'use strict'
-function validateInput(textbox) {
-  if (textbox.value == '') {
-    textbox.setCustomValidity('Required field')
-  } else if (textbox.value < 50) {
-    textbox.setCustomValidity('Value should be greater than 50')
-  } else {
-    textbox.setCustomValidity('')
-  }
-  return true
-}
+
+/**
+ * @param {Event} e
+ */
 
 function onSubmit(e) {
   e.preventDefault()
 
+  /** @type {HTMLInputElement} */
   let widthInput = document.getElementById('width')
+  /** @type {HTMLInputElement} */
   let heightInput = document.getElementById('height')
 
-  widthInput.oninvalid = (e) => validateInput(e)
-  heightInput.onInvalid = (e) => validateInput(e)
+  widthInput.setCustomValidity('')
+  if (!widthInput.checkValidity()) {
+    widthInput.setCustomValidity(widthInput.validationMessage)
+  }
+  widthInput.setCustomValidity('')
+  if (!heightInput.checkValidity()) {
+    widthInput.setCustomValidity(heightInput.validationMessage)
+  }
 
   let width = widthInput.value
   let height = heightInput.value
+  console.log(`Canvas: (${width}, ${height})`)
 
-  let message = `(${width}, ${height})`
-  console.log(message)
+  handleCanvas(width, height)
+  return true
+}
 
+/**
+ * @param {number} width
+ * @param {number} height
+ */
+function handleCanvas(width, height) {
   /** @type {HTMLCanvasElement} */
   let canvas = document.getElementById('canvas')
   if (!canvas) {
     canvas = document.createElement('canvas')
   }
 
+  /** @type {number[]} */
   let clickX = []
+  /** @type {number[]} */
   let clickY = []
+  /** @type {boolean[]} */
   let clickDrag = []
+  /** @type {boolean} */
   let paint
 
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {boolean} dragging
+   */
   function addClick(x, y, dragging) {
     clickX.push(x)
     clickY.push(y)
@@ -43,8 +61,11 @@ function onSubmit(e) {
   }
 
   function redraw() {
+    if (!context) {
+      throw new Error('inexistent context')
+    }
     context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-    context.strokeStyle = '#000000'
+    context.strokeStyle = 'red'
     context.lineJoin = 'round'
     context.lineWidth = 5
 
@@ -72,7 +93,7 @@ function onSubmit(e) {
     let mouseX = e.pageX - canvas.offsetLeft
     let mouseY = e.pageY - canvas.offsetTop
     paint = true
-    addClick(mouseX, mouseY)
+    addClick(mouseX, mouseY, false)
     redraw()
   }
 

@@ -1,17 +1,17 @@
 'use strict'
 
 /**
- * @type {Readonly<{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }>}
+ * @type {Readonly<{ color: string | CanvasGradient | CanvasPattern ; size: number ; join: CanvasLineJoin; }>}
  * paintState is immutable so that references in the points history are different
  */
 let paintState = Object.freeze({
   color: 'red',
-  lineWidth: 10,
-  lineJoin: 'round'
+  size: 10,
+  join: 'round'
 })
 
 /**
- * @param {Partial<{ color: string | CanvasGradient | CanvasPattern; lineWidth: number; lineJoin: CanvasLineJoin; }>} nextState
+ * @param {Partial<{ color: string | CanvasGradient | CanvasPattern; size: number; join: CanvasLineJoin; }>} nextState
  */
 function setPaintState(nextState) {
   paintState = { ...paintState, ...nextState }
@@ -67,13 +67,15 @@ function onSubmit(e) {
   let height = Number(heightInput.value)
   console.log(`Canvas: (${width}, ${height})`)
 
+  let painterDiv = document.createElement('div')
+  painterDiv.id = 'painter'
+
   let palette = generatePalette()
   let canvas = generateCanvas(width, height)
-  let painter = document.createElement('div')
-  painter.id = 'painter'
-  painter.appendChild(palette)
-  painter.appendChild(canvas)
-  document.body.appendChild(painter)
+
+  painterDiv.appendChild(palette)
+  painterDiv.appendChild(canvas)
+  document.body.appendChild(painterDiv)
   return true
 }
 
@@ -82,18 +84,64 @@ function generatePalette() {
   if (!palette) {
     palette = document.createElement('div')
     palette.id = 'palette'
-    for (let color of colors) {
-      let button = document.createElement('input')
-      button.type = 'button'
-      button.className = 'colorChoice'
+
+    let sizeDiv = document.createElement('div')
+    sizeDiv.id = 'size'
+    let sizeText = document.createTextNode('Line size: ')
+    let sizeInput = document.createElement('input')
+    sizeInput.id = 'sizeInput'
+    sizeInput.type = 'number'
+    sizeInput.value = '10'
+    sizeInput.min = '1'
+    sizeInput.onchange = (e) => {
       // @ts-ignore
-      button.style['background-color'] = color
-      button.onclick = (e) => {
+      setPaintState({ size: e.target.value })
+    }
+    sizeDiv.appendChild(sizeText)
+    sizeDiv.appendChild(sizeInput)
+
+    let joinDiv = document.createElement('div')
+    joinDiv.id = 'join'
+    let joinText = document.createTextNode('Line join: ')
+    let joinSelect = document.createElement('select')
+    joinSelect.id = 'joinInput'
+    let round = document.createElement('option')
+    let bevel = document.createElement('option')
+    let miter = document.createElement('option')
+    round.value = 'round'
+    bevel.value = 'bevel'
+    miter.value = 'miter'
+    round.text = 'Round'
+    bevel.text = 'Bevel'
+    miter.text = 'Miter'
+    joinSelect.options.add(round)
+    joinSelect.options.add(bevel)
+    joinSelect.options.add(miter)
+    joinSelect.onchange = (e) => {
+      // @ts-ignore
+      setPaintState({ join: e.target.value })
+    }
+    joinDiv.appendChild(joinText)
+    joinDiv.appendChild(joinSelect)
+
+    let colorsDiv = document.createElement('div')
+    colorsDiv.id = 'colors'
+
+    for (let color of colors) {
+      let colorButton = document.createElement('input')
+      colorButton.type = 'button'
+      colorButton.className = 'colorChoice'
+      // @ts-ignore
+      colorButton.style['background-color'] = color
+      colorButton.onclick = (e) => {
         // @ts-ignore
-        let nextColor = button.style['background-color']
-        setPaintState({ color: nextColor })
+        setPaintState({ color: colorButton.style['background-color'] })
       }
-      palette.appendChild(button)
+      colorsDiv.appendChild(colorButton)
+
+      palette.appendChild(sizeDiv)
+      palette.appendChild(joinDiv)
+      palette.appendChild(colorsDiv)
     }
   }
   return palette
@@ -110,7 +158,7 @@ function generateCanvas(width, height) {
     canvas = document.createElement('canvas')
   }
 
-  /** @type {{ x: number; y: number; isDragging: boolean; paint: { color: string | CanvasGradient | CanvasPattern; lineWidth: number; lineJoin: CanvasLineJoin; }}[]} */
+  /** @type {{ x: number; y: number; isDragging: boolean; paint: { color: string | CanvasGradient | CanvasPattern; size: number; join: CanvasLineJoin; }}[]} */
   let points = []
 
   /** @type {boolean} */
@@ -124,8 +172,8 @@ function generateCanvas(width, height) {
 
     for (let i = 0; i < points.length; i++) {
       context.strokeStyle = points[i].paint.color
-      context.lineJoin = points[i].paint.lineJoin
-      context.lineWidth = points[i].paint.lineWidth
+      context.lineJoin = points[i].paint.join
+      context.lineWidth = points[i].paint.size
       context.beginPath()
       if (points[i].isDragging && i) {
         context.moveTo(points[i - 1].x, points[i - 1].y)

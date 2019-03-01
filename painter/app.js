@@ -9,6 +9,34 @@ let paintState = {
   lineJoin: 'round'
 }
 
+let colors = [
+  'red',
+  'green',
+  'blue',
+  'cyan',
+  'yellow',
+  'orange',
+  'magenta',
+  'purple',
+  'lightblue',
+  'lightcoral',
+  'lightseagreen',
+  'lightgreen',
+  'lightskyblue',
+  'darkblue',
+  'darkred',
+  'darkmagenta',
+  'darkorchid',
+  'darkgoldenrod',
+  'darkcyan',
+  'darkorange',
+  'darkviolet',
+  'darkturquoise',
+  'black',
+  'gray',
+  'white'
+]
+
 /** @param {Event} e */
 function onSubmit(e) {
   e.preventDefault()
@@ -31,8 +59,13 @@ function onSubmit(e) {
   let height = Number(heightInput.value)
   console.log(`Canvas: (${width}, ${height})`)
 
-  generateCanvas(width, height)
-  generatePalette()
+  let palette = generatePalette()
+  let canvas = generateCanvas(width, height)
+  let painter = document.createElement('div')
+  painter.id = 'painter'
+  painter.appendChild(palette)
+  painter.appendChild(canvas)
+  document.body.appendChild(painter)
   return true
 }
 
@@ -41,9 +74,21 @@ function generatePalette() {
   if (!palette) {
     palette = document.createElement('div')
     palette.id = 'palette'
-    palette.textContent = 'I will be a color palette'
-    document.body.appendChild(palette)
+    for (let color of colors) {
+      let button = document.createElement('input')
+      button.type = 'button'
+      button.className = 'colorChoice'
+      // @ts-ignore
+      button.style['background-color'] = color
+      button.onclick = (e) => {
+        // @ts-ignore
+        let nextColor = button.style['background-color']
+        paintState.color = nextColor
+      }
+      palette.appendChild(button)
+    }
   }
+  return palette
 }
 
 /**
@@ -105,7 +150,6 @@ function generateCanvas(width, height) {
   canvas.id = 'canvas'
   canvas.width = width
   canvas.height = height
-  document.body.appendChild(canvas)
 
   let context = canvas.getContext('2d')
 
@@ -134,4 +178,6 @@ function generateCanvas(width, height) {
   canvas.onmouseleave = (e) => {
     isPainting = false
   }
+
+  return canvas
 }

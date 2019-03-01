@@ -117,19 +117,23 @@ function renderCanvas(width, height) {
     if (!context) {
       throw new Error('inexistent context')
     }
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height)
 
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height)
     for (let i = 0; i < points.length; i++) {
-      context.strokeStyle = points[i].paint.color
-      context.lineJoin = points[i].paint.join
-      context.lineWidth = points[i].paint.size
+      let curr = points[i]
+      let last
+      context.strokeStyle = curr.paint.color
+      context.lineJoin = curr.paint.join
+      context.lineWidth = curr.paint.size
+
       context.beginPath()
-      if (points[i].isDragging && i) {
-        context.moveTo(points[i - 1].x, points[i - 1].y)
+      if (curr.isDragging && i !== 0) {
+        last = points[i - 1]
+        context.moveTo(last.x, last.y)
       } else {
-        context.moveTo(points[i].x - 1, points[i].y)
+        context.moveTo(curr.x - 1, curr.y)
       }
-      context.lineTo(points[i].x, points[i].y)
+      context.lineTo(curr.x, curr.y)
       context.closePath()
       context.stroke()
     }

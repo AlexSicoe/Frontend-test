@@ -1,12 +1,20 @@
 'use strict'
 
 /**
- * @type {{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }}
+ * @type {Readonly<{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }>}
+ * paintState is immutable so that references in the points history are different
  */
-let paintState = {
+let paintState = Object.freeze({
   color: 'red',
   lineWidth: 10,
   lineJoin: 'round'
+})
+
+/**
+ * @param {Partial<{ color: string | CanvasGradient | CanvasPattern; lineWidth: number; lineJoin: CanvasLineJoin; }>} nextState
+ */
+function setPaintState(nextState) {
+  paintState = { ...paintState, ...nextState }
 }
 
 let colors = [
@@ -83,7 +91,7 @@ function generatePalette() {
       button.onclick = (e) => {
         // @ts-ignore
         let nextColor = button.style['background-color']
-        paintState.color = nextColor
+        setPaintState({ color: nextColor })
       }
       palette.appendChild(button)
     }
@@ -102,25 +110,22 @@ function generateCanvas(width, height) {
     canvas = document.createElement('canvas')
   }
 
-  // objs {x,y,isdragging,color}
+  /** @type {{ x: number; y: number; isDragging: boolean; paint: { color: string | CanvasGradient | CanvasPattern; lineWidth: number; lineJoin: CanvasLineJoin; }}[]} */
   let points = []
 
   /** @type {boolean} */
   let isPainting
 
-  /**
-   * @param {{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }} paintState
-   */
-  function redraw(paintState) {
+  function redraw() {
     if (!context) {
       throw new Error('inexistent context')
     }
     context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-    context.strokeStyle = paintState.color
-    context.lineJoin = paintState.lineJoin
-    context.lineWidth = paintState.lineWidth
 
     for (let i = 0; i < points.length; i++) {
+      context.strokeStyle = points[i].paint.color
+      context.lineJoin = points[i].paint.lineJoin
+      context.lineWidth = points[i].paint.lineWidth
       context.beginPath()
       if (points[i].isDragging && i) {
         context.moveTo(points[i - 1].x, points[i - 1].y)
@@ -146,10 +151,11 @@ function generateCanvas(width, height) {
     let point = {
       x,
       y,
-      isDragging: false
+      isDragging: false,
+      paint: paintState
     }
     points.push(point)
-    redraw(paintState)
+    redraw()
   }
 
   canvas.onmousemove = (e) => {
@@ -160,10 +166,11 @@ function generateCanvas(width, height) {
       let point = {
         x,
         y,
-        isDragging: true
+        isDragging: true,
+        paint: paintState
       }
       points.push(point)
-      redraw(paintState)
+      redraw()
     }
   }
 

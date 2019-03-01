@@ -70,8 +70,8 @@ function onSubmit(e) {
   let painterDiv = document.createElement('div')
   painterDiv.id = 'painter'
 
-  let palette = generatePalette()
-  let canvas = generateCanvas(width, height)
+  let palette = renderPalette()
+  let canvas = renderCanvas(width, height)
 
   painterDiv.appendChild(palette)
   painterDiv.appendChild(canvas)
@@ -79,70 +79,19 @@ function onSubmit(e) {
   return true
 }
 
-function generatePalette() {
+function renderPalette() {
   let palette = document.getElementById('palette')
   if (!palette) {
     palette = document.createElement('div')
     palette.id = 'palette'
 
-    let sizeDiv = document.createElement('div')
-    sizeDiv.id = 'size'
-    let sizeText = document.createTextNode('Line size: ')
-    let sizeInput = document.createElement('input')
-    sizeInput.id = 'sizeInput'
-    sizeInput.type = 'number'
-    sizeInput.value = '10'
-    sizeInput.min = '1'
-    sizeInput.onchange = (e) => {
-      // @ts-ignore
-      setPaintState({ size: e.target.value })
-    }
-    sizeDiv.appendChild(sizeText)
-    sizeDiv.appendChild(sizeInput)
+    let sizeDiv = renderSizeDiv()
+    let joinDiv = renderJoinDiv()
+    let colorsDiv = renderColorsDiv()
 
-    let joinDiv = document.createElement('div')
-    joinDiv.id = 'join'
-    let joinText = document.createTextNode('Line join: ')
-    let joinSelect = document.createElement('select')
-    joinSelect.id = 'joinInput'
-    let round = document.createElement('option')
-    let bevel = document.createElement('option')
-    let miter = document.createElement('option')
-    round.value = 'round'
-    bevel.value = 'bevel'
-    miter.value = 'miter'
-    round.text = 'Round'
-    bevel.text = 'Bevel'
-    miter.text = 'Miter'
-    joinSelect.options.add(round)
-    joinSelect.options.add(bevel)
-    joinSelect.options.add(miter)
-    joinSelect.onchange = (e) => {
-      // @ts-ignore
-      setPaintState({ join: e.target.value })
-    }
-    joinDiv.appendChild(joinText)
-    joinDiv.appendChild(joinSelect)
-
-    let colorsDiv = document.createElement('div')
-    colorsDiv.id = 'colors'
-
-    for (let color of colors) {
-      let colorButton = document.createElement('input')
-      colorButton.type = 'button'
-      colorButton.className = 'colorChoice'
-      // @ts-ignore
-      colorButton.style['background-color'] = color
-      colorButton.onclick = (e) => {
-        // @ts-ignore
-        setPaintState({ color: colorButton.style['background-color'] })
-      }
-      colorsDiv.appendChild(colorButton)
-
-      palette.appendChild(sizeDiv)
-      palette.appendChild(joinDiv)
-      palette.appendChild(colorsDiv)
-    }
+    palette.appendChild(sizeDiv)
+    palette.appendChild(joinDiv)
+    palette.appendChild(colorsDiv)
   }
   return palette
 }
@@ -151,7 +100,7 @@ function generatePalette() {
  * @param {number} width
  * @param {number} height
  */
-function generateCanvas(width, height) {
+function renderCanvas(width, height) {
   /** @type {HTMLCanvasElement} */
   let canvas = document.getElementById('canvas')
   if (!canvas) {
@@ -231,4 +180,68 @@ function generateCanvas(width, height) {
   }
 
   return canvas
+}
+
+function renderSizeDiv() {
+  let sizeDiv = document.createElement('div')
+  sizeDiv.id = 'size'
+  let text = document.createTextNode('Line size: ')
+  let input = document.createElement('input')
+  input.id = 'sizeInput'
+  input.type = 'number'
+  input.value = '10'
+  input.min = '1'
+  input.onchange = (e) => {
+    // @ts-ignore
+    setPaintState({ size: e.target.value })
+  }
+  sizeDiv.appendChild(text)
+  sizeDiv.appendChild(input)
+  return sizeDiv
+}
+
+function renderJoinDiv() {
+  let joinDiv = document.createElement('div')
+  joinDiv.id = 'join'
+  let text = document.createTextNode('Line join: ')
+  let select = document.createElement('select')
+  select.id = 'joinInput'
+  let round = document.createElement('option')
+  let bevel = document.createElement('option')
+  let miter = document.createElement('option')
+  round.value = 'round'
+  bevel.value = 'bevel'
+  miter.value = 'miter'
+  round.text = 'Round'
+  bevel.text = 'Bevel'
+  miter.text = 'Miter'
+  select.options.add(round)
+  select.options.add(bevel)
+  select.options.add(miter)
+  select.onchange = (e) => {
+    // @ts-ignore
+    setPaintState({ join: e.target.value })
+  }
+  joinDiv.appendChild(text)
+  joinDiv.appendChild(select)
+  return joinDiv
+}
+
+function renderColorsDiv() {
+  let colorsDiv = document.createElement('div')
+  colorsDiv.id = 'colors'
+
+  for (let color of colors) {
+    let colorButton = document.createElement('input')
+    colorButton.type = 'button'
+    colorButton.className = 'colorChoice'
+    // @ts-ignore
+    colorButton.style['background-color'] = color
+    colorButton.onclick = (e) => {
+      // @ts-ignore
+      setPaintState({ color: colorButton.style['background-color'] })
+    }
+    colorsDiv.appendChild(colorButton)
+  }
+  return colorsDiv
 }

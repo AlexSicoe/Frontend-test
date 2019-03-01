@@ -1,9 +1,15 @@
 'use strict'
 
 /**
- * @param {Event} e
+ * @type {{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }}
  */
+let paintState = {
+  color: 'red',
+  lineWidth: 10,
+  lineJoin: 'round'
+}
 
+/** @param {Event} e */
 function onSubmit(e) {
   e.preventDefault()
 
@@ -21,19 +27,30 @@ function onSubmit(e) {
     widthInput.setCustomValidity(heightInput.validationMessage)
   }
 
-  let width = widthInput.value
-  let height = heightInput.value
+  let width = Number(widthInput.value)
+  let height = Number(heightInput.value)
   console.log(`Canvas: (${width}, ${height})`)
 
-  handleCanvas(width, height)
+  generateCanvas(width, height)
+  generatePalette()
   return true
+}
+
+function generatePalette() {
+  let palette = document.getElementById('palette')
+  if (!palette) {
+    palette = document.createElement('div')
+    palette.id = 'palette'
+    palette.textContent = 'I will be a color palette'
+    document.body.appendChild(palette)
+  }
 }
 
 /**
  * @param {number} width
  * @param {number} height
  */
-function handleCanvas(width, height) {
+function generateCanvas(width, height) {
   /** @type {HTMLCanvasElement} */
   let canvas = document.getElementById('canvas')
   if (!canvas) {
@@ -45,33 +62,36 @@ function handleCanvas(width, height) {
   /** @type {number[]} */
   let clickY = []
   /** @type {boolean[]} */
-  let clickDrag = []
+  let clickDrags = []
   /** @type {boolean} */
-  let paint
+  let isPainting
 
   /**
    * @param {number} x
    * @param {number} y
-   * @param {boolean} dragging
+   * @param {boolean} isDragging
    */
-  function addClick(x, y, dragging) {
+  function addClick(x, y, isDragging) {
     clickX.push(x)
     clickY.push(y)
-    clickDrag.push(dragging)
+    clickDrags.push(isDragging)
   }
 
-  function redraw() {
+  /**
+   * @param {{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }} paintState
+   */
+  function redraw(paintState) {
     if (!context) {
       throw new Error('inexistent context')
     }
     context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-    context.strokeStyle = 'red'
-    context.lineJoin = 'round'
-    context.lineWidth = 5
+    context.strokeStyle = paintState.color
+    context.lineJoin = paintState.lineJoin
+    context.lineWidth = paintState.lineWidth
 
     for (let i = 0; i < clickX.length; i++) {
       context.beginPath()
-      if (clickDrag[i] && i) {
+      if (clickDrags[i] && i) {
         context.moveTo(clickX[i - 1], clickY[i - 1])
       } else {
         context.moveTo(clickX[i] - 1, clickY[i])
@@ -92,26 +112,26 @@ function handleCanvas(width, height) {
   canvas.onmousedown = (e) => {
     let mouseX = e.pageX - canvas.offsetLeft
     let mouseY = e.pageY - canvas.offsetTop
-    paint = true
+    isPainting = true
     addClick(mouseX, mouseY, false)
-    redraw()
+    redraw(paintState)
   }
 
   canvas.onmousemove = (e) => {
     let mouseX = e.pageX - canvas.offsetLeft
     let mouseY = e.pageY - canvas.offsetTop
 
-    if (paint) {
+    if (isPainting) {
       addClick(mouseX, mouseY, true)
-      redraw()
+      redraw(paintState)
     }
   }
 
   canvas.onmouseup = (e) => {
-    paint = false
+    isPainting = false
   }
 
   canvas.onmouseleave = (e) => {
-    paint = false
+    isPainting = false
   }
 }

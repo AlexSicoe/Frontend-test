@@ -102,25 +102,11 @@ function generateCanvas(width, height) {
     canvas = document.createElement('canvas')
   }
 
-  /** @type {number[]} */
-  let clickX = []
-  /** @type {number[]} */
-  let clickY = []
-  /** @type {boolean[]} */
-  let clickDrags = []
+  // objs {x,y,isdragging,color}
+  let points = []
+
   /** @type {boolean} */
   let isPainting
-
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isDragging
-   */
-  function addClick(x, y, isDragging) {
-    clickX.push(x)
-    clickY.push(y)
-    clickDrags.push(isDragging)
-  }
 
   /**
    * @param {{ color: string | CanvasGradient | CanvasPattern ; lineWidth: number ; lineJoin: CanvasLineJoin; }} paintState
@@ -134,14 +120,14 @@ function generateCanvas(width, height) {
     context.lineJoin = paintState.lineJoin
     context.lineWidth = paintState.lineWidth
 
-    for (let i = 0; i < clickX.length; i++) {
+    for (let i = 0; i < points.length; i++) {
       context.beginPath()
-      if (clickDrags[i] && i) {
-        context.moveTo(clickX[i - 1], clickY[i - 1])
+      if (points[i].isDragging && i) {
+        context.moveTo(points[i - 1].x, points[i - 1].y)
       } else {
-        context.moveTo(clickX[i] - 1, clickY[i])
+        context.moveTo(points[i].x - 1, points[i].y)
       }
-      context.lineTo(clickX[i], clickY[i])
+      context.lineTo(points[i].x, points[i].y)
       context.closePath()
       context.stroke()
     }
@@ -154,19 +140,29 @@ function generateCanvas(width, height) {
   let context = canvas.getContext('2d')
 
   canvas.onmousedown = (e) => {
-    let mouseX = e.pageX - canvas.offsetLeft
-    let mouseY = e.pageY - canvas.offsetTop
+    let x = e.pageX - canvas.offsetLeft
+    let y = e.pageY - canvas.offsetTop
     isPainting = true
-    addClick(mouseX, mouseY, false)
+    let point = {
+      x,
+      y,
+      isDragging: false
+    }
+    points.push(point)
     redraw(paintState)
   }
 
   canvas.onmousemove = (e) => {
-    let mouseX = e.pageX - canvas.offsetLeft
-    let mouseY = e.pageY - canvas.offsetTop
+    let x = e.pageX - canvas.offsetLeft
+    let y = e.pageY - canvas.offsetTop
 
     if (isPainting) {
-      addClick(mouseX, mouseY, true)
+      let point = {
+        x,
+        y,
+        isDragging: true
+      }
+      points.push(point)
       redraw(paintState)
     }
   }

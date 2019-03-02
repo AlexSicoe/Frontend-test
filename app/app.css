@@ -30,8 +30,15 @@ header {
 footer {
   padding: 22px;
   display: flex;
-  justify-content: flex-end;
   background: #DEE5E5;
+}
+
+#footer.desktop {
+  justify-content: flex-end;
+}
+
+#footer.mobile {
+  justify-content: center;
 }
 
 main {

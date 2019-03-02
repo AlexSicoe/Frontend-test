@@ -25,16 +25,21 @@ class Observable {
 
 let observable = new Observable()
 observable.subscribe((isMobile) => {
+  let footer = document.getElementById('footer')
   let mobileImage = document.getElementById('mobileImage')
   let sidebar = document.getElementById('sidebar')
 
+  if (!footer) {
+    throw new Error(`Element with id "footer" doesn't exist`)
+  }
   if (!mobileImage) {
     throw new Error(`Element with id "mobileImage" doesn't exist`)
   }
   if (!sidebar) {
     throw new Error(`Element with id "sidebar" doesn't exist`)
   }
-  let elements = [document.body]
+
+  let elements = [document.body, footer]
 
   if (isMobile) {
     elements.forEach((e) => (e.className = MOBILE_CLASSNAME))

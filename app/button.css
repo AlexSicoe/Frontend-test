@@ -2,19 +2,17 @@
   display: inline-block;
   border: 2px solid #EC6825;
   border-radius: 7px;
-  border-spacing: 10px;
-  margin: 22px;
   box-shadow: 0 1px 3px gray;
 }
 
 .orangeBorder:hover {
-  box-shadow: 0 3px 3px gray;
   transform: scale(1.05);
+  box-shadow: 0 3px 3px gray;
 }
 
 .orangeBorder:active {
-  box-shadow: none;
   transform: scale(0.95);
+  box-shadow: none;
 }
 
 .btn {
@@ -22,22 +20,23 @@
   border: 1px solid white;
   border-radius: 5px;
   color: white;
-  font-size: 12px;
-  padding: 7px 50px;
+  font-size: 14px;
+  padding: 9px 20px;
 }
 
 .btn:focus {
   outline: 0;
 }
 
+#btnText {
+  display: inline;
+  margin: 26px;
+}
+
 #rightArrow {
-  position: relative;
-  right: 30px;
-  font-size: 18px;
+  display: inline;
 }
 
 #leftArrow {
-  position: relative;
-  left: 30px;
-  font-size: 18px;
+  display: inline;
 }

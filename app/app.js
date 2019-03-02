@@ -1,10 +1,12 @@
+const MOBILE_CLASSNAME = 'mobile'
+const DESKTOP_CLASSNAME = 'desktop'
 const TIPPING_POINT = 960
 const shouldWindowBeMobile = () => window.innerWidth <= TIPPING_POINT
 
 class Observable {
   constructor() {
-    this.observers = []
     this.data
+    this.observers = []
   }
 
   subscribe(f) {
@@ -23,14 +25,23 @@ class Observable {
 
 let observable = new Observable()
 observable.subscribe((shouldRenderMobile) => {
+  let image = document.getElementById('image')
+  if (!image) {
+    throw new Error(`Element with id "image" doesn't exist`)
+  }
+
+  let elements = [document.body, image]
+
   if (shouldRenderMobile) {
-    console.log('mobile rendered')
+    elements.forEach((e) => (e.className = MOBILE_CLASSNAME))
   } else {
-    console.log('desktop rendered')
+    elements.forEach((e) => (e.className = DESKTOP_CLASSNAME))
   }
 })
 
-observable.notify(shouldWindowBeMobile())
+window.onload = () => {
+  observable.notify(shouldWindowBeMobile())
+}
 
 window.onresize = () => {
   if (shouldWindowBeMobile() && observable.data === false) {

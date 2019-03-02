@@ -3,11 +3,26 @@ html, body {
   height: 100%;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.desktop {
+  background: #F4F4F4;
+}
+
+body.mobile {
+  background: white;
+}
+
 header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  background-color: #EA6E0E;
+  background: #EA6E0E;
   color: white;
 }
 
@@ -15,7 +30,7 @@ footer {
   padding: 22px;
   display: flex;
   justify-content: flex-end;
-  background-color: #DEE5E5;
+  background: #DEE5E5;
 }
 
 main {
@@ -42,19 +57,20 @@ p {
   margin: 20px;
 }
 
-#homepage {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: #F4F4F4;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 #image {
   background-image: linear-gradient(120deg, #FBEA00 10%, #F8C100 20%, #7FAD6A 80%);
+}
+
+#image.desktop {
   width: 300px;
   height: 160px;
   margin: 30px;
+}
+
+#image.mobile {
+  width: 30px;
+  height: 30px;
+  border: white solid 3px
 }
 
 #title {

@@ -24,18 +24,26 @@ class Observable {
 }
 
 let observable = new Observable()
-observable.subscribe((shouldRenderMobile) => {
-  let image = document.getElementById('image')
-  if (!image) {
-    throw new Error(`Element with id "image" doesn't exist`)
+observable.subscribe((isMobile) => {
+  let mobileImage = document.getElementById('mobileImage')
+  let sidebar = document.getElementById('sidebar')
+
+  if (!mobileImage) {
+    throw new Error(`Element with id "mobileImage" doesn't exist`)
   }
+  if (!sidebar) {
+    throw new Error(`Element with id "sidebar" doesn't exist`)
+  }
+  let elements = [document.body]
 
-  let elements = [document.body, image]
-
-  if (shouldRenderMobile) {
+  if (isMobile) {
     elements.forEach((e) => (e.className = MOBILE_CLASSNAME))
+    sidebar.hidden = true
+    mobileImage.hidden = false
   } else {
     elements.forEach((e) => (e.className = DESKTOP_CLASSNAME))
+    sidebar.hidden = false
+    mobileImage.hidden = true
   }
 })
 

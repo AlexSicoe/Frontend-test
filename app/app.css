@@ -77,11 +77,16 @@ p {
   margin: 30px;
 }
 
-#mobileImage {
+#mobileImageContainer {
   position: relative;
+  top: -2px;
+  left: -46px;
+}
+
+#mobileImage {
+  position: absolute;
   width: 66px;
   height: 66px;
-  top: -34px;
   border-radius: 66px;
   border: white solid 2px;
   align-self: center;

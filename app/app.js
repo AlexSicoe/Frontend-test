@@ -24,6 +24,7 @@ class Observable {
 }
 
 let observable = new Observable()
+
 observable.subscribe((isMobile) => {
   let footer = document.getElementById('footer')
   let mobileImage = document.getElementById('mobileImage')
@@ -59,7 +60,8 @@ window.onload = () => {
 window.onresize = () => {
   if (shouldWindowBeMobile() && observable.data === false) {
     observable.notify(true)
-  } else if (!shouldWindowBeMobile() && observable.data === true) {
+  }
+  if (!shouldWindowBeMobile() && observable.data === true) {
     observable.notify(false)
   }
 }

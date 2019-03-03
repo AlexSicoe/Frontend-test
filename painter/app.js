@@ -1,21 +1,26 @@
 'use strict'
 
-/**
- * @type {Readonly<{ color: string | CanvasGradient | CanvasPattern ; size: number ; join: CanvasLineJoin; }>}
- * paintState is immutable so that references in the points history are different
- */
-let paintState = Object.freeze({
-  color: 'red',
-  size: 10,
-  join: 'round'
-})
+class PaintState {
+  constructor() {
+    /**
+     * @type {{ color: string | CanvasGradient | CanvasPattern; size: number; join: CanvasLineJoin; }}
+     */
+    this.state = {
+      color: 'red',
+      size: 10,
+      join: 'round'
+    }
+  }
 
-/**
- * @param {Partial<{ color: string | CanvasGradient | CanvasPattern; size: number; join: CanvasLineJoin; }>} nextState
- */
-function setPaintState(nextState) {
-  paintState = { ...paintState, ...nextState }
+  /**
+   * @param {Partial<{ color: string | CanvasGradient | CanvasPattern; size: number; join: CanvasLineJoin; }>} nextState
+   */
+  setState(nextState) {
+    this.state = { ...this.state, ...nextState }
+  }
 }
+
+let paint = new PaintState()
 
 let colors = [
   'red',
@@ -149,7 +154,7 @@ function renderCanvas(width, height) {
       x,
       y,
       isDragging: false,
-      paint: paintState
+      paint: paint.state
     }
     points.push(point)
     draw(context)
@@ -164,7 +169,7 @@ function renderCanvas(width, height) {
         x,
         y,
         isDragging: true,
-        paint: paintState
+        paint: paint.state
       }
       points.push(point)
       draw(context)
@@ -193,7 +198,7 @@ function renderSizeDiv() {
   input.min = '1'
   input.onchange = (e) => {
     // @ts-ignore
-    setPaintState({ size: e.target.value })
+    paint.setState({ size: e.target.value })
   }
   sizeDiv.appendChild(text)
   sizeDiv.appendChild(input)
@@ -220,7 +225,7 @@ function renderJoinDiv() {
   select.options.add(miter)
   select.onchange = (e) => {
     // @ts-ignore
-    setPaintState({ join: e.target.value })
+    paint.setState({ join: e.target.value })
   }
   joinDiv.appendChild(text)
   joinDiv.appendChild(select)
@@ -239,9 +244,17 @@ function renderColorsDiv() {
     colorButton.style['background-color'] = color
     colorButton.onclick = (e) => {
       // @ts-ignore
-      setPaintState({ color: colorButton.style['background-color'] })
+      paint.setState({
+        color: colorButton.style['background-color']
+      })
     }
     colorsDiv.appendChild(colorButton)
   }
   return colorsDiv
+}
+
+module.exports = {
+  renderCanvas,
+  renderPalette,
+  PaintState
 }
